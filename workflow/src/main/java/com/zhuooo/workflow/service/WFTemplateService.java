@@ -3,8 +3,7 @@ package com.zhuooo.workflow.service;
 import com.zhuooo.constant.ReturnCode;
 import com.zhuooo.exception.ZhuoooException;
 import com.zhuooo.workflow.dao.*;
-import com.zhuooo.workflow.pojo.db.WFInstancePojo;
-import com.zhuooo.workflow.pojo.db.WFTemplatePojo;
+import com.zhuooo.workflow.pojo.db.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,9 +43,28 @@ public class WFTemplateService {
         // 如果不存在则直接插入
         if (existed == null) {
             wfTemplateDao.insert(template);
+
+            if(!CollectionUtils.isEmpty(template.getLines())){
+                for(WFTemplateLinePojo line: template.getLines()){
+                    line.setTemplateId(template.getId());
+                }
+            }
             wfTemplateLineDao.insert(template.getLines());
+
+            if(!CollectionUtils.isEmpty(template.getNodes())){
+                for(WFTemplateNodePojo node: template.getNodes()){
+                    node.setTemplateId(template.getId());
+                }
+            }
             wfTemplateNodeDao.insert(template.getNodes());
+
+            if(!CollectionUtils.isEmpty(template.getParameters())){
+                for(WFParameterPojo parameter: template.getParameters()){
+                    parameter.setTemplateId(template.getId());
+                }
+            }
             wfParameterDao.insert(template.getParameters());
+
             return template.getId();
         }
 

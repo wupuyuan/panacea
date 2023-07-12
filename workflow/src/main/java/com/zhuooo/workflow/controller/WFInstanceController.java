@@ -113,6 +113,13 @@ public class WFInstanceController {
         return ZhuoooResponse.success(wfInstanceService.list(user, Collections.singletonList(WFConstantEnum.INITIATOR), list));
     }
 
+    @ApiOperation(value = "查询待当前人审批的流程")
+    @GetMapping(value = "/candidate/list")
+    public ZhuoooResponse<List<WFInstancePojo>> listApplication(@Param("token") String token) {
+        UserVo user = exampleService.findLoginUser(token);
+        return ZhuoooResponse.success(wfInstanceService.list(user, Collections.singletonList(WFConstantEnum.CANDIDATE), null));
+    }
+
     @ApiOperation(value = "查询当前人经手的流程(审批、加签、驳回)")
     @GetMapping(value = "/handle/list")
     public ZhuoooResponse<List<WFInstancePojo>> listHandle(@Param("token") String token, @Param("status") Integer status) {
